@@ -1,18 +1,33 @@
 # dependencias del proyecto
-from flask import Flask 
+from flask import Flask, render_template 
+from flask_wtf import FlaskForm
+from wtforms import StringField,SubmitField
+from flask_bootstrap import Bootstrap
+
+
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from datetime import datetime
-
+from config import Config
 # crear el objeto de aplicación
 app = Flask(__name__)
 #configurar app para conectarse a bd
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3310/flask-shopy-2687350'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+app.config.from_object(Config)
+
+#Configurar bootstrap con app
+bootstrap = Bootstrap(app)
 # crear el objeto sqlalchemy
 db = SQLAlchemy(app)
 #crear el objeto de migracion y activarlo
 migrate = Migrate(app , db)
+
+#Crear el formulario de registro de productos
+class RegistroProductoForm(FlaskForm):
+    nombre = StringField('Nombre del producto')
+    precio = StringField('Precio del producto' )
+    submit = SubmitField('Guardar Producto')
+
 
 ##Modelos <<entities>>
 class Cliente(db.Model):
@@ -27,9 +42,10 @@ class Producto(db.Model):
     __tablename__ = "productos"
     id = db.Column(db.Integer , primary_key=True)
     nombre = db.Column(db.String(64))
-    precio = db.Column(db.Numeric(precision = 10 , scale = 2),
-                       nullable =False)
-    imagen = db.Column(db.String(100))
+    precio = db.Column(db.Numeric(precision = 10 , 
+                                  scale = 2))
+    imagen = db.Column(db.String(100),
+                       nullable = True)
     
 class Venta (db.Model):
     __tablename__ = "ventas"
@@ -44,8 +60,14 @@ class Detalle (db.Model):
     producto_id = db.Column (db.Integer, db.ForeignKey('productos.id'))
     venta_id = db.Column (db.Integer, db.ForeignKey('ventas.id'))
     
-    
-
-
-
-
+@app.route('/producto/registrar', methods = ['GET', 'POST'])
+def registrar():
+    form =RegistroProductoForm()
+    p = Producto()
+    if form.validate_on_submit():
+        form.populate_obj(p)
+        db.session.add(p)
+        db.session.commit()
+        return "producto registrado"
+    return render_template('registrar.html' ,
+                           form = form)

@@ -1,13 +1,9 @@
-
 {% extends "base.html"%}
 {%import "bootstrap/wtf.html" as wtf%}
 
-
 {% block content%}
-    <h1>{{operacion}} producto</h1>
+    <h1>{{operacion}} clientes</h1>
     <form action="" method="POST"  novalidate enctype="multipart/form-data">
         {{wtf.quick_form(form)}}
     </form>
 {% endblock%}
-
-

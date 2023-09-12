@@ -8,4 +8,4 @@ mi_blueprint = Blueprint ('blueprint',
 #Se crea una funcionalidad para el modulo
 @mi_blueprint.route("/ejemplo")
 def ejemplo():
-    return "Este es el gordis :3"
+    return "no"

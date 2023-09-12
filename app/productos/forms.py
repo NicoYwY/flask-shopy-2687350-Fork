@@ -5,14 +5,18 @@ from wtforms.validators import InputRequired, NumberRange
 
 
 
-class RegistrarProductoForm(FlaskForm):
+class ProductoForm():
     nombre = StringField("nombre del producto", validators = [InputRequired(message="Nombre del producto requerido")])
     precio = IntegerField("Precio del producto", validators= [InputRequired(message="Precio del producto requerido"), 
                                                               NumberRange(  message="Precio fuera de rango",
                                                               min = 10,
                                                               max = 100000
                                                             )])
+class NewProductForm(FlaskForm, ProductoForm):    
     imagen = FileField("Seleccione imagen del producto:", validators = [FileRequired(message= "Debe seleccionar una imagen"), 
                                                                         FileAllowed([ 'jpg','png'], "Solo se permiten carga de imagenes" )
                                                                         ])
     submit = SubmitField("Guardar")
+
+class EditProductForm(FlaskForm, ProductoForm):
+    submit = SubmitField("Actualizar")

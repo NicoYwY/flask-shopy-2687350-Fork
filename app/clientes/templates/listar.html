@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>  Listado de productos  </h1>
+<a href="/clientes/crear"
+   class= "btn btn-success">
+    Nuevo Cliente
+</a>
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>email</th>
+            <th>password</th>
+            <th>Actualizar</th>
+            <th>Eliminar</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+        {% for cliente in clientes %}
+        <tr>
+            <td>{{ cliente.username}}</td>
+            <td>{{ cliente.email}}</td>
+            <td>{{ cliente.password}}</td>
+            
+            <td>
+                <a href="/clientes/actualizar/ {{cliente.id}}">
+                    Actualizar
+                </a>
+            </td>
+            <td>
+                <a href="/clientes/eliminar/{{cliente.id}}">
+                    Eliminar
+                </a>
+            </td>
+           
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock%}
